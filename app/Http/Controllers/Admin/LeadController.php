@@ -132,16 +132,26 @@ public function callLead(Lead $lead)
 
     try {
         $call = $client->calls->create(
-            $to,
-            $from,
-            [
-                'url' => route('admin.twilio.twiml', ['lead' => $lead->id])
-            ]
-        );
+    $to,
+    $from,
+    [
+        'url' => route('admin.twilio.twiml', ['lead' => $lead->id]),
+        'statusCallback' => route('twilio.call.status'),
+        'statusCallbackEvent' => [
+            'initiated',
+            'ringing',
+            'answered',
+            'completed'
+        ],
+        'statusCallbackMethod' => 'POST'
+    ]
+);
+
 
         // Save call to database
         Call::create([
             'lead_id' => $lead->id,
+            'phone' => $to,
             'status' => $call->status,  // queued, ringing, in-progress, completed
             'called_at' => now(),
             'twilio_sid' => $call->sid
@@ -161,26 +171,47 @@ public function callNumber(Request $request)
     ]);
 
     $to = $request->phone_number;
-    $sid = config('services.twilio.sid', env('TWILIO_SID'));
-    $token = config('services.twilio.token', env('TWILIO_AUTH_TOKEN'));
-    $from = config('services.twilio.phone', env('TWILIO_PHONE'));
+
+    $sid    = config('services.twilio.sid', env('TWILIO_SID'));
+    $token  = config('services.twilio.token', env('TWILIO_AUTH_TOKEN'));
+    $from   = config('services.twilio.phone', env('TWILIO_PHONE'));
+    $to     = $request->phone_number;
 
     $client = new Client($sid, $token);
 
     try {
         $call = $client->calls->create(
-    $to,
-    $from,
-    [
-        'url' => route('admin.twilio.dialer.twiml')
-    ]
-);
+            $to,
+            $from,
+            [
+                'url' => route('admin.twilio.dialer.twiml'),
+                'statusCallback' => route('twilio.call.status'),
+                'statusCallbackEvent' => [
+                    'initiated',
+                    'ringing',
+                    'answered',
+                    'completed'
+                ],
+                'statusCallbackMethod' => 'POST'
+            ]
+        );
+
+        // ✅ SAVE DIALER CALL
+        Call::create([
+            'lead_id' => null,
+            'phone' => $to,
+            'status' => $call->status,
+            'called_at' => now(),
+            'twilio_sid' => $call->sid,
+        ]);
 
         return back()->with('success', 'Call initiated to ' . $to);
+
     } catch (\Exception $e) {
         return back()->with('error', 'Failed to make call: ' . $e->getMessage());
     }
 }
+
 
 
 

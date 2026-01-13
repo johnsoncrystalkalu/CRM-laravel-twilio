@@ -9,7 +9,7 @@ class Call extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['lead_id', 'status', 'called_at', 'twilio_sid'];
+    protected $fillable = ['lead_id', 'phone',  'status', 'called_at', 'twilio_sid'];
 
     public function lead()
     {

@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CallController;
 use App\Http\Controllers\Admin\LeadController;
 
+use App\Http\Controllers\TwilioWebhookController;
 use App\Http\Controllers\Admin\CalendarController;
 use Latfur\Event\Http\Controllers\EventController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -19,6 +20,10 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::post('twilio/call-status',
+    [TwilioWebhookController::class, 'callStatus']
+)->name('twilio.call.status');
 
 //Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
@@ -76,7 +81,7 @@ Route::get('admin/twilio/dialer-twiml', function () {
 
 
 Route::get('calls', [CallController::class, 'index'])
-    ->name('admin.calls.index');
+    ->name('admin.calls');
 
     // Show dialer page
 Route::get('admin/dialer', function () {
