@@ -1,13 +1,15 @@
 <?php
 
+use App\Models\Lead;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\CallController;
 use App\Http\Controllers\Admin\LeadController;
-use App\Http\Controllers\Admin\CalendarController;
-use App\Http\Controllers\Admin\DashboardController;
 
+use App\Http\Controllers\Admin\CalendarController;
 use Latfur\Event\Http\Controllers\EventController;
+use App\Http\Controllers\Admin\DashboardController;
 
 
 Route::get('/', function () {
@@ -45,9 +47,45 @@ Route::post('leads/store', [LeadController::class, 'store'])
 Route::delete('delete-lead/{lead}', [LeadController::class, 'destroy'])
     ->name('admin.lead.destroy');
 
-    Route::get('calendar', [CalendarController::class, 'index'])
+    Route::post('leads-call/{lead}/call', [LeadController::class, 'callLead'])
+    ->name('admin.leads.call');
+
+
+       Route::get('calendar', [CalendarController::class, 'index'])
     ->name('admin.calendar');
 
+    Route::get('twilio/twiml/{lead}', function (Lead $lead) {
+    $xml = "<?xml version='1.0' encoding='UTF-8'?>
+        <Response>
+            <Say voice='alice'>Hello, this is a call regarding your lead status. Please check your email for details.</Say>
+        </Response>";
+    return response($xml, 200)->header('Content-Type', 'text/xml');
+})->name('admin.twilio.twiml');
+
+Route::get('admin/twilio/dialer-twiml', function () {
+    return response(
+        "<?xml version='1.0' encoding='UTF-8'?>
+        <Response>
+            <Say voice='alice'>
+                This call was initiated from the CRM dialer.
+            </Say>
+        </Response>",
+        200
+    )->header('Content-Type', 'text/xml');
+})->name('admin.twilio.dialer.twiml');
+
+
+Route::get('calls', [CallController::class, 'index'])
+    ->name('admin.calls.index');
+
+    // Show dialer page
+Route::get('admin/dialer', function () {
+    return view('admin.dialer.index');
+})->name('admin.dialer');
+
+// Handle the call request
+Route::post('dialer/call', [LeadController::class, 'callNumber'])
+    ->name('admin.dialer.call');
 
 
 // New URLs for the package

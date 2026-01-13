@@ -26,4 +26,10 @@ class Lead extends Model
         'category',
         'notes',
     ];
+
+    public function calls()
+{
+    return $this->hasMany(Call::class);
+}
+
 }

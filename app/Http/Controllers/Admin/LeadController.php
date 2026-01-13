@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Call;
 use App\Models\Lead;
+use Twilio\Rest\Client;
 use App\Imports\LeadsImport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -23,7 +25,7 @@ class LeadController extends Controller
             abort(404);
         }
 
-        $leads = Lead::where('category', $category)->get();
+        $leads = Lead::where('category', $category)->Orderby('id', 'desc')->get();
 
         return view('admin.leads.index', compact('leads', 'category'));
     }
@@ -116,5 +118,70 @@ class LeadController extends Controller
 
     return redirect()->route('admin.dashboard')->with('success', 'Lead deleted successfully!');
 }
+
+
+
+public function callLead(Lead $lead)
+{
+    $sid    = config('services.twilio.sid', env('TWILIO_SID'));
+    $token  = config('services.twilio.token', env('TWILIO_AUTH_TOKEN'));
+    $from   = config('services.twilio.phone', env('TWILIO_PHONE'));
+    $to     = $lead->phone_number;
+
+    $client = new Client($sid, $token);
+
+    try {
+        $call = $client->calls->create(
+            $to,
+            $from,
+            [
+                'url' => route('admin.twilio.twiml', ['lead' => $lead->id])
+            ]
+        );
+
+        // Save call to database
+        Call::create([
+            'lead_id' => $lead->id,
+            'status' => $call->status,  // queued, ringing, in-progress, completed
+            'called_at' => now(),
+            'twilio_sid' => $call->sid
+        ]);
+
+        return back()->with('success', 'Call initiated to ' . $to);
+    } catch (\Exception $e) {
+        return back()->with('error', 'Failed to make call: ' . $e->getMessage());
+    }
+}
+
+
+public function callNumber(Request $request)
+{
+    $request->validate([
+        'phone_number' => 'required|string'
+    ]);
+
+    $to = $request->phone_number;
+    $sid = config('services.twilio.sid', env('TWILIO_SID'));
+    $token = config('services.twilio.token', env('TWILIO_AUTH_TOKEN'));
+    $from = config('services.twilio.phone', env('TWILIO_PHONE'));
+
+    $client = new Client($sid, $token);
+
+    try {
+        $call = $client->calls->create(
+    $to,
+    $from,
+    [
+        'url' => route('admin.twilio.dialer.twiml')
+    ]
+);
+
+        return back()->with('success', 'Call initiated to ' . $to);
+    } catch (\Exception $e) {
+        return back()->with('error', 'Failed to make call: ' . $e->getMessage());
+    }
+}
+
+
 
 }

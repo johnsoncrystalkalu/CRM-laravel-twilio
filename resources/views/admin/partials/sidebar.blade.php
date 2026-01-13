@@ -25,6 +25,17 @@
                                 Calendar
                             </a>
 
+                            <a class="nav-link" href="{{ route('admin.dialer') }}">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-phone-alt"></i></div>
+                                Dailer
+                            </a>
+                            <a class="nav-link" href="{{ route('admin.calendar') }}">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-user-alt"></i></div>
+                                Profile
+                            </a>
+
 
 
 

@@ -16,6 +16,11 @@
         </div>
         <div>
 
+            <form action="{{ route('admin.leads.call', $lead) }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit" class="btn btn-sm btn-info">Call</button>
+</form>
+
     <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal"
             data-bs-target="#editLeadModal{{ $lead->id }}">
         Edit
