@@ -14,12 +14,12 @@ use App\Http\Controllers\Admin\DashboardController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return redirect()->route('admin.dashboard');
+});
 
 Route::post('twilio/call-status',
     [TwilioWebhookController::class, 'callStatus']
@@ -67,7 +67,7 @@ Route::delete('delete-lead/{lead}', [LeadController::class, 'destroy'])
     return response($xml, 200)->header('Content-Type', 'text/xml');
 })->name('admin.twilio.twiml');
 
-Route::get('admin/twilio/dialer-twiml', function () {
+Route::get('twilio/dialer-twiml', function () {
     return response(
         "<?xml version='1.0' encoding='UTF-8'?>
         <Response>
@@ -84,7 +84,7 @@ Route::get('calls', [CallController::class, 'index'])
     ->name('admin.calls');
 
     // Show dialer page
-Route::get('admin/dialer', function () {
+Route::get('dialer', function () {
     return view('admin.dialer.index');
 })->name('admin.dialer');
 

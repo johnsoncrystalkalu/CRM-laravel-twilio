@@ -8,11 +8,11 @@
 <form method="POST" action="{{ route('admin.leads.bulk-delete') }}">
 @csrf
 
-<div class="card mb-4">
+<div class="card mb-4 mt-2">
     <div class="card-header d-flex justify-content-between align-items-center">
         <div>
             <i class="fas fa-table me-1"></i>
-            {{ $category }} Leads
+            {{ $leadsCount }} Leads
         </div>
 
         <div class="d-flex gap-3">
@@ -52,7 +52,6 @@
                     <th>Zip</th>
                     <th>Age</th>
                     <th>DOB</th>
-                    <th>Lead Type</th>
                     <th>Status</th>
                     <th>Owner</th>
                     <th>Category</th>
@@ -76,7 +75,6 @@
                     <td>{{ $lead->zip_code }}</td>
                     <td>{{ $lead->age }}</td>
                     <td>{{ $lead->dob }}</td>
-                    <td>{{ $lead->lead_type }}</td>
                     <td>{{ $lead->status }}</td>
                     <td>{{ $lead->owner }}</td>
                     <td>{{ $lead->category }}</td>

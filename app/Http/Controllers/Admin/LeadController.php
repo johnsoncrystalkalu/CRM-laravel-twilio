@@ -26,8 +26,9 @@ class LeadController extends Controller
         }
 
         $leads = Lead::where('category', $category)->Orderby('id', 'desc')->get();
+        $leadsCount = Lead::where('category', $category)->count();
 
-        return view('admin.leads.index', compact('leads', 'category'));
+        return view('admin.leads.index', compact('leads', 'category', 'leadsCount'));
     }
 
 

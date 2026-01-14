@@ -1,243 +1,146 @@
 @extends('admin.layouts.main')
 
 @section('content')
-<div class="container-fluid px-4 py-4">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-1">Lead Details</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="#">Leads</a></li>
-                    <li class="breadcrumb-item active">{{ $lead->first_name }} {{ $lead->last_name }}</li>
-                </ol>
-            </nav>
-        </div>
-        <div>
+<div class="container-fluid px-4 py-4" style="background-color: #f8f9fa; min-height: 100vh;">
 
-            <form action="{{ route('admin.leads.call', $lead) }}" method="POST" class="d-inline">
-    @csrf
-    <button type="submit" class="btn btn-sm btn-info">Call</button>
-</form>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center py-3">
+            <div class="d-flex align-items-center">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                     style="width: 50px; height: 50px; font-size: 20px; font-weight: 600;">
+                    {{ strtoupper(substr($lead->first_name, 0, 1) . substr($lead->last_name, 0, 1)) }}
+                </div>
+                <div class="ms-3">
+                    <h4 class="mb-0 fw-bold">{{ $lead->first_name }} {{ $lead->last_name }}</h4>
+                    <span class="badge rounded-pill bg-light text-primary border border-primary">{{ $lead->status }}</span>
+                    <span class="text-muted ms-2 small"><i class="bi bi-clock me-1"></i>Interacted with {{ $lead->updated_at?->diffForHumans() }}</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <form action="{{ route('admin.leads.call', $lead) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-success px-4 shadow-sm">
+                        <i class="bi bi-telephone-outbound-fill me-2"></i>Call Now
+                    </button>
+                </form>
 
-    <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal"
-            data-bs-target="#editLeadModal{{ $lead->id }}">
-        Edit
-    </button>
+                <button type="button" class="btn btn-white border shadow-sm" data-bs-toggle="modal" data-bs-target="#editLeadModal{{ $lead->id }}">
+                    <i class="bi bi-pencil-square me-1"></i> Edit
+                </button>
 
-<form action="{{ route('admin.lead.destroy', $lead) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure you want to delete this lead?');">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-outline-danger">
-         <i class="bi bi-trash"></i> Delete
-    </button>
-</form>
-
-
+                <form action="{{ route('admin.lead.destroy', $lead) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn btn-outline-danger shadow-sm">
+                         <i class="bi bi-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
     <div class="row">
-        <!-- Main Lead Information -->
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold text-dark">Lead Overview</h5>
+                </div>
                 <div class="card-body p-4">
-                    <div class="d-flex align-items-start mb-4">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
-                             style="width: 60px; height: 60px; font-size: 24px; font-weight: 600;">
-                            {{ strtoupper(substr($lead->first_name, 0, 1) . substr($lead->last_name, 0, 1)) }}
-                        </div>
-                        <div class="flex-grow-1">
-                            <h3 class="mb-1">{{ $lead->first_name }} {{ $lead->last_name }}</h3>
-                            <div class="d-flex flex-wrap gap-2">
-                                <span class="badge bg-primary">{{ $lead->lead_type }}</span>
-                                <span class="badge bg-success">{{ $lead->status }}</span>
-                                <span class="badge bg-info text-dark">{{ $lead->category }}</span>
+                    <div class="row mb-4">
+                        <div class="col-sm-6 mb-3">
+                            <label class="text-muted small text-uppercase fw-bold mb-1">Email Address</label>
+                            <div class="d-flex align-items-center">
+                                <span class="text-dark fw-medium">{{ $lead->email ?? 'N/A' }}</span>
+                                @if($lead->email)
+                                    <a href="mailto:{{ $lead->email }}" class="ms-2 text-primary"><i class="bi bi-envelope"></i></a>
+                                @endif
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Contact Information -->
-                    <div class="mb-4">
-                        <h5 class="text-primary mb-3">
-                            <i class="bi bi-person-lines-fill me-2"></i>Contact Information
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center p-3 bg-light rounded">
-                                    <i class="bi bi-telephone-fill text-primary fs-4 me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Phone Number</small>
-                                        <strong>{{ $lead->phone_number }}</strong>
-                                    </div>
-                                </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="text-muted small text-uppercase fw-bold mb-1">Phone Number</label>
+                            <div class="d-flex align-items-center">
+                                <span class="text-dark fw-medium">{{ $lead->phone_number }}</span>
+                                <i class="bi bi-patch-check-fill text-success ms-2" title="Verified"></i>
                             </div>
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center p-3 bg-light rounded">
-                                    <i class="bi bi-envelope-fill text-primary fs-4 me-3"></i>
-                                    <div>
-                                        <small class="text-muted d-block">Email Address</small>
-                                        <strong>{{ $lead->email ?? 'Not provided' }}</strong>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="text-muted small text-uppercase fw-bold mb-1">Lead Type</label>
+                            <div><span class="badge bg-soft-primary text-primary">{{ $lead->lead_type }}</span></div>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label class="text-muted small text-uppercase fw-bold mb-1">Category</label>
+                            <div><span class="badge bg-soft-info text-info">{{ $lead->category }}</span></div>
                         </div>
                     </div>
 
-                    <!-- Location Information -->
-                    <div class="mb-4">
-                        <h5 class="text-primary mb-3">
-                            <i class="bi bi-geo-alt-fill me-2"></i>Location Details
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-md-12">
-                                <div class="p-3 bg-light rounded">
-                                    <small class="text-muted d-block mb-1">Address</small>
-                                    <strong>{{ $lead->address ?? 'No address provided' }}</strong>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light rounded">
-                                    <small class="text-muted d-block mb-1">State</small>
-                                    <strong>{{ $lead->state }}</strong>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light rounded">
-                                    <small class="text-muted d-block mb-1">City</small>
-                                    <strong>{{ $lead->city }}</strong>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="p-3 bg-light rounded">
-                                    <small class="text-muted d-block mb-1">Zip Code</small>
-                                    <strong>{{ $lead->zip_code }}</strong>
-                                </div>
-                            </div>
+                    <hr class="opacity-10">
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-geo-alt me-2 text-primary"></i>Location</h6>
+                            <p class="text-dark mb-1">{{ $lead->address ?? 'No address' }}</p>
+                            <p class="text-muted small">{{ $lead->city }}, {{ $lead->state }} {{ $lead->zip_code }}</p>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <h6 class="fw-bold mb-3"><i class="bi bi-person me-2 text-primary"></i>Demographics</h6>
+                            <p class="text-dark mb-1"><strong>Age:</strong> {{ $lead->age }} years old</p>
+                            <p class="text-dark"><strong>DOB:</strong> {{ $lead->dob }}</p>
                         </div>
                     </div>
 
-                    <!-- Personal Information -->
-                    <div class="mb-4">
-                        <h5 class="text-primary mb-3">
-                            <i class="bi bi-person-badge-fill me-2"></i>Personal Information
-                        </h5>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="p-3 bg-light rounded">
-                                    <small class="text-muted d-block mb-1">Age</small>
-                                    <strong>{{ $lead->age }} years old</strong>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="p-3 bg-light rounded">
-                                    <small class="text-muted d-block mb-1">Date of Birth</small>
-                                    <strong>{{ $lead->dob }}</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notes Section -->
                     @if($lead->notes)
-                    <div>
-                        <h5 class="text-primary mb-3">
-                            <i class="bi bi-sticky-fill me-2"></i>Notes
-                        </h5>
-                        <div class="p-3 bg-light rounded">
-                            <p class="mb-0">{{ $lead->notes }}</p>
-                        </div>
+                    <div class="bg-light p-3 rounded border-start border-primary border-4">
+                        <h6 class="fw-bold small text-uppercase">Internal Notes</h6>
+                        <p class="mb-0 text-secondary italic">"{{ $lead->notes }}"</p>
                     </div>
                     @endif
                 </div>
             </div>
 
-            <!-- Activity Timeline (Optional Enhancement) -->
             <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold text-dark">Recent Activity</h5>
+                </div>
                 <div class="card-body p-4">
-                    <h5 class="text-primary mb-3">
-                        <i class="bi bi-clock-history me-2"></i>Activity Timeline
-                    </h5>
-                    <div class="text-muted text-center py-4">
-                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                        <p>No activities recorded yet</p>
+                    <div class="text-center py-4">
+                        <img src="https://cdn-icons-png.flaticon.com/512/5058/5058379.png" width="60" class="mb-3 opacity-50" alt="empty">
+                        <p class="text-muted">No interactions logged for this lead yet.</p>
+                        <button class="btn btn-sm btn-outline-primary">Log Activity</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Sidebar -->
         <div class="col-lg-4">
-            <!-- Owner Information -->
+            <div class="card border-0 shadow-sm mb-4 text-white" style="background: linear-gradient(45deg, #0d6efd, #00d2ff);">
+                <div class="card-body p-4 text-center">
+                    <div class="small text-uppercase opacity-75 mb-1">Lead</div>
+                    <h2 class="fw-bold mb-0">Profile</h2>
+                    <div class="mt-3 small">Created {{ $lead->created_at?->format('F d, Y') }}</div>
+                </div>
+            </div>
+
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
-                    <h5 class="text-primary mb-3">
-                        <i class="bi bi-person-check-fill me-2"></i>Lead Owner
-                    </h5>
-                    <div class="d-flex align-items-center p-3 bg-light rounded">
-                        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
-                             style="width: 45px; height: 45px;">
-                            <i class="bi bi-person-fill fs-5"></i>
-                        </div>
-                        <div>
-                            <strong class="d-block">{{ $lead->owner }}</strong>
-                            <small class="text-muted">Account Owner</small>
-                        </div>
+                    <h6 class="fw-bold mb-3">Quick Actions</h6>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-light text-start border"><i class="bi bi-envelope me-2 text-primary"></i> Send Email</button>
+                        <button class="btn btn-light text-start border"><i class="bi bi-calendar-event me-2 text-primary"></i> Schedule Follow-up</button>
+                        <button class="btn btn-light text-start border"><i class="bi bi-send me-2 text-primary"></i> SMS Message</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-body p-4">
-                    <h5 class="text-primary mb-3">
-                        <i class="bi bi-bar-chart-fill me-2"></i>Quick Stats
-                    </h5>
-                    <div class="mb-3 pb-3 border-bottom">
-                        {{-- <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Lead Score</span>
-                            <strong class="text-success">Hot</strong>
-                        </div> --}}
-                    </div>
-                    <div class="mb-3 pb-3 border-bottom">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Interacted with</span>
-                            <strong>{{ $lead->updated_at?->format('M d, Y') }}</strong>
-
-                        </div>
-                    </div>
-                    <div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-muted">Created</span>
-                            <strong>{{ $lead->created_at?->format('M d, Y') }}</strong>
-                        </div>
-                        <small class="text-muted d-block mt-1">
-                            {{ $lead->created_at?->diffForHumans() }}
-                        </small>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h5 class="text-primary mb-3">
-                        <i class="bi bi-lightning-fill me-2"></i>Quick Actions
-                    </h5>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-outline-primary text-start">
-                            <i class="bi bi-telephone-fill me-2"></i>Call Lead
-                        </button>
-                        <button class="btn btn-outline-primary text-start">
-                            <i class="bi bi-envelope-fill me-2"></i>Send Email
-                        </button>
-                        <button class="btn btn-outline-primary text-start">
-                            <i class="bi bi-calendar-check-fill me-2"></i>Schedule Meeting
-                        </button>
-                        <button class="btn btn-outline-primary text-start">
-                            <i class="bi bi-arrow-right-circle-fill me-2"></i>Convert to Client
-                        </button>
+                    <h6 class="fw-bold mb-3">Ownership</h6>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-soft-secondary rounded p-2 me-3">
+                            <i class="bi bi-shield-check text-secondary fs-4"></i>
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-bold">{{ $lead->owner }}</p>
+                            <p class="mb-0 small text-muted">Assigned Account Manager</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -247,23 +150,20 @@
 
 @include('admin.components.edit_lead_modal')
 
-<!-- Add Bootstrap Icons CDN to your layout if not already included -->
-@push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
-    .card {
-        transition: transform 0.2s;
-    }
-    .card:hover {
-        transform: translateY(-2px);
-    }
-    .badge {
-        font-weight: 500;
-        padding: 0.35em 0.65em;
-    }
-    .btn {
-        transition: all 0.2s;
-    }
+    /* Custom Badge Styles */
+    .bg-soft-primary { background-color: #e7f0ff; color: #0d6efd; }
+    .bg-soft-info { background-color: #e0f7fa; color: #00acc1; }
+    .bg-soft-secondary { background-color: #f1f3f5; color: #6c757d; }
+
+    .btn-white { background: #fff; color: #333; }
+    .btn-white:hover { background: #f8f9fa; }
+
+    .card { border-radius: 12px; }
+    label { letter-spacing: 0.5px; }
+
+    /* Subtle Hover Effects */
+    .btn { border-radius: 8px; font-weight: 500; }
 </style>
-@endpush
+
 @endsection
