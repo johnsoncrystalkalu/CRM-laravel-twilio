@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.main')
 
 @section('content')
@@ -14,7 +15,6 @@
         border: 4px solid #3a3a3c;
     }
 
-    /* Screen display - Now editable */
     .screen {
         height: 100px;
         display: flex;
@@ -32,10 +32,9 @@
         width: 100%;
         outline: none;
         font-weight: 300;
-        caret-color: #34c759; /* Green blinking cursor */
+        caret-color: #34c759;
     }
 
-    /* Keypad */
     .keypad {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -55,12 +54,12 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        user-select: none; /* Prevents text selection while holding */
+        user-select: none;
+        -webkit-tap-highlight-color: transparent; /* Fixes mobile blue flash */
         transition: background 0.1s;
     }
 
     .key:active { background: #636366; }
-
     .key .num { font-size: 1.8rem; line-height: 1; pointer-events: none; }
     .key .abc { font-size: 0.6rem; color: #8e8e93; font-weight: bold; pointer-events: none; }
 
@@ -101,6 +100,7 @@
         <div class="screen">
             <input type="text" id="phoneNumber" name="phone_number"
                    autocomplete="off" autofocus
+                   value="{{ $_GET['number'] ?? '' }}"
                    placeholder="Enter number">
         </div>
 
@@ -121,11 +121,11 @@
 
             <button type="button" class="key"
                     id="zeroKey"
-                    onmousedown="startZeroHold()"
-                    onmouseup="endZeroHold()"
-                    onmouseleave="endZeroHold()"
-                    ontouchstart="startZeroHold()"
-                    ontouchend="endZeroHold()">
+                    onmousedown="startZeroHold(event)"
+                    onmouseup="endZeroHold(event)"
+                    onmouseleave="endZeroHold(event)"
+                    ontouchstart="startZeroHold(event)"
+                    ontouchend="endZeroHold(event)">
                 <span class="num">0</span>
                 <span class="abc" style="font-size: 0.8rem; color: #34c759;">+</span>
             </button>
@@ -147,18 +147,16 @@
 <script>
     const input = document.getElementById('phoneNumber');
     let holdTimer;
-    let heldLongEnough = false;
+    let isLongPress = false;
+    let isProcessing = false; // Prevents double firing
 
-    // 1. Keyboard Support: Allow typing but keep focus
     input.addEventListener('keydown', (e) => {
-        // You can add logic here to restrict to numbers only if desired
         if (e.key === 'Enter') {
             e.preventDefault();
             document.querySelector('.call-btn').click();
         }
     });
 
-    // 2. Button Support
     function append(val) {
         input.value += val;
         input.focus();
@@ -169,24 +167,34 @@
         input.focus();
     }
 
-    // 3. The "Plus" Logic (Fixed)
-    function startZeroHold() {
-        heldLongEnough = false;
+    // Fixed Long Press Logic
+    function startZeroHold(e) {
+        // Prevent default behavior to stop ghost clicks
+        if (e.type === 'touchstart') e.preventDefault();
+        
+        isLongPress = false;
+        isProcessing = true; 
+
         holdTimer = setTimeout(() => {
-            heldLongEnough = true;
+            isLongPress = true;
             input.value += '+';
             input.focus();
-        }, 800); // Wait 800ms to trigger the +
+        }, 700); 
     }
 
-    function endZeroHold() {
+    function endZeroHold(e) {
+        if (!isProcessing) return;
+        
         clearTimeout(holdTimer);
-        // If they let go quickly, it's just a zero
-        if (!heldLongEnough) {
+        
+        // If it wasn't a long press (meaning user released early), add '0'
+        if (!isLongPress) {
             append('0');
         }
+        
+        isProcessing = false;
+        isLongPress = false;
     }
 </script>
-
 
 @endsection

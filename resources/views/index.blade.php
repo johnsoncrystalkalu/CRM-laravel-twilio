@@ -99,7 +99,6 @@
 <body>
 
 
-
 <!--  -->
     <header class="header-area p-relative">
 
@@ -163,13 +162,217 @@
 
     </header>
 
+    <style>
+        /* Custom Styling */
+        .slider-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
 
-<br/>
-<br/>
+        .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            background-size: cover;
+            background-position: center;
+        }
+
+
+.slide1 {
+    position: relative;
+    background-image: url('{{ asset('assets/assets_landing/img/banner/banner-bg-4.jpg') }}');
+    background-size: cover;
+    background-position: center;
+}
+
+.slide1::before, .slide2::before  {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(25, 35, 45, 0.2); /* Adjust opacity here */
+    z-index: 1; /* Ensure overlay stays below text */
+}
+
+.slide-content {
+    position: relative; /* Makes sure the text stays above the overlay */
+    z-index: 2;
+    color: white; /* Ensure text is white for visibility */
+}
 
 
 
-<img src="{{ asset('assets/assets_landing/img/banner1.jpg') }}" alt="Imagewidth="100%">
+        .slide2 {
+    position: relative;
+    background-image: url('{{ asset('assets/assets_landing/img/banner/banner-bg-6.jpg') }}');
+
+    background-size: cover;
+    background-position: center;
+        }
+
+
+        .slide3 {
+    position: relative;
+   background-image: url('{{ asset('assets/assets_landing/img/banner/banner-bg-7.jpg') }}');
+
+    background-size: cover;
+    background-position: center;
+        }
+
+        .slide-content {
+/*            background: rgba(0, 0, 0, 0.6);*/
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .slide-content h2 {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .swiper-button-next, .swiper-button-prev {
+            color: #00807f;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: #00807f;
+        }
+
+.swiper-button-next, .swiper-button-prev {
+    font-size: 11px; /* Default is around 20px */
+}
+
+/* Increase overall banner height */
+.slider-container {
+    height: 90vh;
+    min-height: 650px;
+    position: relative;
+}
+
+/* Ensure swiper fills the container */
+.slider-container .swiper {
+    height: 100%;
+}
+
+/* Each slide should stretch fully */
+.slider-container .swiper-slide {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Optional: center content vertically with spacing */
+.slide-content {
+    padding: 80px 0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .slider-container {
+        height: 80vh;
+        min-height: 520px;
+    }
+
+    .slide-content {
+        padding: 60px 20px;
+    }
+}
+/* Hide by default */
+.mobile-only-br {
+    display: none;
+}
+
+/* Show only on mobile */
+@media (max-width: 768px) {
+    .mobile-only-br {
+        display: inline;
+    }
+}
+
+    </style>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.css" integrity="sha512-pmAAV1X4Nh5jA9m+jcvwJXFQvCBi3T17aZ1KWkqXr7g/O2YMvO8rfaa5ETWDuBvRq6fbDjlw4jHL44jNTScaKg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+   <span class="mobile-only-br">
+    <br><br><br>
+</span>
+
+  
+    <!-- Swiper Slider -->
+    <div class="slider-container">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+
+                <!-- Slide 1 -->
+                <div class="swiper-slide slide1">
+                    <div class="slide-content">Welcome to
+                        <h2>{{ config('app.name')}}</h2>
+                        <p> We specialize in the recovery of assets lost through online financial fraud,
+                        helping victims reclaim what was taken from them.</p>
+                            
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="swiper-slide slide2">
+                    <div class="slide-content"> Online Financial Fraud
+                        <h2>A Growing Global Threat</h2>
+                        <p>Millions of people worldwide have lost money through fraudulent online
+                        trading platforms and deceptive investment schemes.</p>
+                             
+                    </div>
+                </div>
+
+
+                <!-- Slide 3 -->
+                <div class="swiper-slide slide3">
+                    <div class="slide-content">Protecting Investors
+                        <h2>From Digital Scams</h2>
+                        <p>The rise of digital markets has exposed many inexperienced investors
+                        to scams such as Binary Options, Forex, CFD, and Cryptocurrency fraud.</p>
+                            
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="swiper-button-next" style="height: 22px;"></div>
+            <div class="swiper-button-prev" style="height: 22px;"></div>
+
+            <!-- Pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+
+    <!-- Swiper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.js" integrity="sha512-hRhHH3+D9xVKPpodEiYzHWIG8CWbCjp7LCdZ00K3/6xsdC3iT0OlPJLIwxSMEl07gya1Ae8iAqXjMMLpzqqh0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+    </script>
+
+{{-- <img src="{{ asset('assets/assets_landing/img/banner1.jpg') }}" alt="Imagewidth="100%"> --}}
 
     <section class="banner-area bg-1">
         <div class="container">

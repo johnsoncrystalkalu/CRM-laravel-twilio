@@ -17,12 +17,35 @@
                 </div>
             </div>
             <div class="d-flex gap-2">
-                <form action="{{ route('admin.leads.call', $lead) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-success px-4 shadow-sm">
-                        <i class="bi bi-telephone-outbound-fill me-2"></i>Call Now
-                    </button>
-                </form>
+<button type="button" 
+        class="btn btn-success px-4 shadow-sm" 
+        onclick="openDialer('{{ $lead->phone_number }}')">
+    <i class="bi bi-telephone-outbound-fill me-2"></i>Call {{ $lead->phone_number }}
+</button>
+
+<script>
+function openDialer(phoneNumber) {
+    // 1. Clean the number (removes spaces, dashes, parentheses)
+    // This ensures +234 810-123 becomes +234810123
+    const cleanNumber = phoneNumber.replace(/[^+\d]/g, '');
+
+    // 2. Define your dialer URL with the parameter
+    const url = `{{ route('admin.dialer') }}?number=${cleanNumber}`;
+
+    // 3. Open in a new popup window
+    // Adjust width and height to fit your phone dialer UI
+    const width = 400;
+    const height = 700;
+    const left = (window.screen.width / 2) - (width / 2);
+    const top = (window.screen.height / 2) - (height / 2);
+
+    window.open(
+        url, 
+        'PhoneDialer', 
+        `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=no`
+    );
+}
+</script>
 
                 <button type="button" class="btn btn-white border shadow-sm" data-bs-toggle="modal" data-bs-target="#editLeadModal{{ $lead->id }}">
                     <i class="bi bi-pencil-square me-1"></i> Edit
@@ -119,7 +142,7 @@
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm mb-4">
+            {{-- <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body p-4">
                     <h6 class="fw-bold mb-3">Quick Actions</h6>
                     <div class="d-grid gap-2">
@@ -128,7 +151,7 @@
                         <button class="btn btn-light text-start border"><i class="bi bi-send me-2 text-primary"></i> SMS Message</button>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">

