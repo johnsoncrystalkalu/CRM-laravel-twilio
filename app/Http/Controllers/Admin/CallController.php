@@ -12,4 +12,10 @@ class CallController extends Controller
         $calls = Call::with('lead')->latest()->paginate(20);
         return view('admin.calls.index', compact('calls'));
     }
+
+    public function delete($id){
+        $call = Call::findOrFail($id);
+        $call->delete();
+        return redirect()->back()->with('success', 'Call record deleted successfully.');
+    }
 }

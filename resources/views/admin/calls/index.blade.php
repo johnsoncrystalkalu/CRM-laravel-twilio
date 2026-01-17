@@ -14,6 +14,7 @@
                         <th>Status</th>
                         <th>Called At</th>
                         <th>Twilio SID</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,6 +38,13 @@
 
                             <td>{{ $call->called_at }}</td>
                             <td>{{ $call->twilio_sid }}</td>
+                            <td>
+                                <form method="POST" action="{{ route('admin.calls.delete', $call->id) }}" onsubmit="return confirm('Are you sure you want to delete this call record?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

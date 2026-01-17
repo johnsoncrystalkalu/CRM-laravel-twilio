@@ -84,6 +84,8 @@ Route::get('twilio/dialer-twiml', function () {
 
 Route::get('calls', [CallController::class, 'index'])
     ->name('admin.calls');
+Route::delete('delete-call/{id}', [CallController::class, 'delete'])
+    ->name('admin.calls.delete');
 
     // Show dialer page
 Route::get('dialer', function () {
