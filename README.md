@@ -22,68 +22,135 @@ A modern, high-performance Lead Management System integrated with Twilio Voice s
 | ![Dash](public/assets/screenshots/t0.jpg) | ![Leads](public/assets/screenshots/t1.jpg) | ![Dialer](public/assets/screenshots/t2.jpg) | ![Calendar](public/assets/screenshots/t3.jpg) |
 
 ---
+# CRM Laravel Twilio Integration 🚀
 
-## 🚀 Installation & Setup
+A Laravel-based CRM with Twilio-powered SMS and voice features. Built with Laravel 10+, Tailwind CSS, and Bootstrap 5.
 
-Follow these steps to get your local environment running.
+---
 
-### 1. Clone & Install
+## Table of Contents
+
+* [Installation & Setup](#installation--setup)
+* [Environment Configuration](#environment-configuration)
+* [Twilio Integration](#twilio-integration-required)
+* [Database Setup](#database-setup)
+* [Running the Project](#running-the-project)
+* [Tech Stack](#tech-stack)
+* [Contributing](#contributing)
+* [Support](#support)
+
+---
+
+## Installation & Setup
+
+Follow these steps to get the project running locally:
+
+### 1. Clone & Install Dependencies
+
 ```bash
-git clone [https://github.com/johnsoncrystalkalu/CRM-laravel-twilio.git](https://github.com/johnsoncrystalkalu/CRM-laravel-twilio.git)
-cd your-repo-name
+git clone https://github.com/johnsoncrystalkalu/CRM-laravel-twilio.git
+cd CRM-laravel-twilio
 composer install
-npm install && npm run dev
+npm install
+npm run dev
+```
+
+---
 
 ## ⚙️ Environment Configuration
 
-Before running the application, you must configure your environment variables. Rename `.env.example` to `.env` and update the database and application settings.
+Before running the application, configure your environment variables:
 
 ```bash
 cp .env.example .env
 php artisan key:generate
+```
 
+Update the `.env` file with your database and application settings.
 
+---
 
-3. Twilio Integration (Required)
+## Twilio Integration (Required)
 
-Create a Twilio Account
-Set up a Voice-capable phone number
-Create a TwiML App in the Twilio Console
-Add the following credentials to your .env file:
+1. Create a [Twilio Account](https://www.twilio.com/try-twilio)
+2. Set up a voice-capable phone number
+3. Create a TwiML App in the Twilio Console
+4. Add the following credentials to your `.env` file:
 
-envTWILIO_SID=your_account_sid
+```env
+TWILIO_SID=your_account_sid
 TWILIO_AUTH_TOKEN=your_auth_token
 TWILIO_PHONE=your_twilio_phone_number
 TWILIO_TWIML_APP_SID=your_twiml_app_sid
 TWILIO_API_KEY=your_api_key
 TWILIO_API_SECRET=your_api_secret
+```
 
-4. Database Setup
-Ensure your database credentials are set in your .env file, then run:
-bashphp artisan migrate
+---
+
+## Database Setup
+
+Ensure your database credentials are set in `.env`, then run:
+
+```bash
+php artisan migrate
 php artisan db:seed
+```
 
-5. Start the Project
-bashphp artisan serve
-Your application will be available at http://localhost:8000
+---
 
-🛠 Tech Stack
+## Running the Project
 
-Framework: Laravel 10+
-UI: Tailwind CSS & Bootstrap 5
-Telephony: Twilio SDK
-Icons: FontAwesome 6
-Excel Processing: Maatwebsite/Laravel-Excel
+Start the Laravel development server:
 
+```bash
+php artisan serve
+```
 
-🤝 Contributing
-The SMS feature is currently open for development! We welcome contributions.
-How to Contribute
+Visit [http://localhost:8000](http://localhost:8000) to access the application.
 
-Fork the project
-Create your feature branch (git checkout -b feature/AmazingFeature)
-Commit your changes (git commit -m 'Add some AmazingFeature')
-Push to the branch (git push origin feature/AmazingFeature)
-Open a Pull Request
+---
 
-Need help? Check the Twilio documentation or open an issue in this repository.
+## 🛠 Tech Stack
+
+* **Framework:** Laravel 10+
+* **UI:** Tailwind CSS & Bootstrap 5
+* **Telephony:** Twilio SDK
+* **Icons:** FontAwesome 6
+* **Excel Processing:** Maatwebsite/Laravel-Excel
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! The SMS feature is currently open for development.
+
+1. Fork the project
+2. Create your feature branch:
+
+```bash
+git checkout -b feature/AmazingFeature
+```
+
+3. Commit your changes:
+
+```bash
+git commit -m "Add some AmazingFeature"
+```
+
+4. Push to your branch:
+
+```bash
+git push origin feature/AmazingFeature
+```
+
+5. Open a Pull Request
+
+---
+
+## Support
+
+Need help?
+
+* Check the [Twilio Documentation](https://www.twilio.com/docs)
+* Open an issue in this repository
