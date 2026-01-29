@@ -1,40 +1,61 @@
-
 @extends('admin.layouts.main')
 
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
-    .phone-body {
-        max-width: 360px;
-        background: #1c1c1e;
-        margin: 50px auto;
-        border-radius: 50px;
-        padding: 30px;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-        border: 4px solid #3a3a3c;
+    /* Fancy Light Theme Variables */
+    :root {
+        --phone-bg: #fdfdfd;
+        --screen-text: #1d1d1f;
+        --key-bg: #f2f2f7;
+        --key-text: #1d1d1f;
+        --key-active: #e5e5ea;
+        --accent-green: #34c759;
+        --delete-red: #ff3b30;
+        --soft-shadow: 0 20px 60px rgba(0,0,0,0.1);
     }
 
+    .phone-body {
+        max-width: 380px;
+        background: var(--phone-bg);
+        margin: 50px auto;
+        border-radius: 45px;
+        padding: 40px 25px;
+        box-shadow: var(--soft-shadow);
+        border: 8px solid #ffffff; /* Bezel effect */
+        position: relative;
+    }
+
+    /* Screen/Display Area */
     .screen {
-        height: 100px;
+        height: 120px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
     }
 
     #phoneNumber {
         background: transparent;
         border: none;
-        color: white;
-        font-size: 2.2rem;
+        color: var(--screen-text);
+        font-size: 2.5rem;
         text-align: center;
         width: 100%;
         outline: none;
-        font-weight: 300;
-        caret-color: #34c759;
+        font-weight: 400;
+        letter-spacing: -1px;
     }
 
+    #phoneNumber::placeholder {
+        color: #aeaeb2;
+        font-size: 1.5rem;
+        font-weight: 300;
+    }
+
+    /* Keypad Grid */
     .keypad {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -43,54 +64,85 @@
     }
 
     .key {
-        width: 75px;
-        height: 75px;
-        background: #3a3a3c;
+        width: 80px;
+        height: 80px;
+        background: var(--key-bg);
         border: none;
         border-radius: 50%;
-        color: white;
+        color: var(--key-text);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent; /* Fixes mobile blue flash */
-        transition: background 0.1s;
+        transition: all 0.2s ease;
+        text-decoration: none;
     }
 
-    .key:active { background: #636366; }
-    .key .num { font-size: 1.8rem; line-height: 1; pointer-events: none; }
-    .key .abc { font-size: 0.6rem; color: #8e8e93; font-weight: bold; pointer-events: none; }
+    .key:active {
+        background: var(--key-active);
+        transform: scale(0.92);
+    }
 
+    .key .num {
+        font-size: 2rem;
+        font-weight: 400;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    .key .abc {
+        font-size: 0.65rem;
+        color: #8e8e93;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-top: 2px;
+        pointer-events: none;
+        text-transform: uppercase;
+    }
+
+    /* Bottom Action Row */
     .bottom-actions {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         align-items: center;
-        margin-top: 30px;
+        margin-top: 40px;
         justify-items: center;
     }
 
     .call-btn {
         grid-column: 2;
-        width: 75px;
-        height: 75px;
-        background: #34c759;
+        width: 80px;
+        height: 80px;
+        background: var(--accent-green);
         border-radius: 50%;
         border: none;
         color: white;
-        font-size: 1.8rem;
+        font-size: 2rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 10px 25px rgba(52, 199, 89, 0.3);
+        transition: transform 0.2s ease;
+        cursor: pointer;
+    }
+
+    .call-btn:active {
+        transform: scale(0.9);
+        background: #2db34f;
     }
 
     .delete-btn {
-        background: none;
+        background: transparent;
         border: none;
-        color: #8e8e93;
-        font-size: 1.5rem;
+        color: #aeaeb2;
+        font-size: 1.6rem;
         cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .delete-btn:hover {
+        color: var(--delete-red);
     }
 </style>
 
@@ -127,14 +179,14 @@
                     ontouchstart="startZeroHold(event)"
                     ontouchend="endZeroHold(event)">
                 <span class="num">0</span>
-                <span class="abc" style="font-size: 0.8rem; color: #34c759;">+</span>
+                <span class="abc" style="color: var(--accent-green); font-size: 0.9rem;">+</span>
             </button>
 
             <button type="button" class="key" onclick="append('#')"><span class="num">#</span><span class="abc">&nbsp;</span></button>
         </div>
 
         <div class="bottom-actions">
-            <button type="submit" class="call-btn">
+            <div></div> <button type="submit" class="call-btn">
                 <i class="fas fa-phone"></i>
             </button>
             <button type="button" class="delete-btn" onclick="backspace()">
@@ -145,10 +197,11 @@
 </div>
 
 <script>
+    /* Logic remains untouched per your request */
     const input = document.getElementById('phoneNumber');
     let holdTimer;
     let isLongPress = false;
-    let isProcessing = false; // Prevents double firing
+    let isProcessing = false; 
 
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
@@ -167,11 +220,8 @@
         input.focus();
     }
 
-    // Fixed Long Press Logic
     function startZeroHold(e) {
-        // Prevent default behavior to stop ghost clicks
         if (e.type === 'touchstart') e.preventDefault();
-        
         isLongPress = false;
         isProcessing = true; 
 
@@ -184,17 +234,12 @@
 
     function endZeroHold(e) {
         if (!isProcessing) return;
-        
         clearTimeout(holdTimer);
-        
-        // If it wasn't a long press (meaning user released early), add '0'
         if (!isLongPress) {
             append('0');
         }
-        
         isProcessing = false;
         isLongPress = false;
     }
 </script>
-
 @endsection

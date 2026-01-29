@@ -22,6 +22,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return redirect()->route('admin.dashboard');
 });
+Route::get('/dashboard', function () {
+    return redirect()->route('admin.dashboard');
+})->name('dashboard');
 
 Route::post('twilio/call-status',
     [TwilioWebhookController::class, 'callStatus']

@@ -16,9 +16,10 @@ class DashboardController extends Controller
     $recoveryLeadsCount = Lead::where('category', 'Recovery')->count();
     $tradingLeadsCount  = Lead::where('category', 'Trading')->count();
     $adminCount         = User::where('role', 'is_admin')->count();
+    $userCount         = User::count();
     $callCount         = Call::count();
 
    // $tradingLeadsCount = 66666;
-    return view('admin.dashboard', compact('recoveryLeadsCount', 'tradingLeadsCount', 'adminCount', 'callCount'));
+    return view('admin.dashboard', compact('recoveryLeadsCount', 'tradingLeadsCount', 'adminCount', 'userCount', 'callCount'));
 }
 }
