@@ -1,32 +1,33 @@
 * text=auto eol=lf
 
-*.blade.php diff=html
-*.css diff=css
-*.html diff=html
-*.md diff=markdown
-*.php diff=php
+# Count only PHP and Blade files
+*.php linguist-language=PHP
+*.blade.php linguist-language=PHP
 
-/.github export-ignore
-CHANGELOG.md export-ignore
-.styleci.yml export-ignore
+# Everything else should be ignored from language stats
+*.css linguist-vendored
+*.js linguist-vendored
+*.html linguist-vendored
+*.md linguist-vendored
+*.json linguist-vendored
+*.yml linguist-vendored
+*.yaml linguist-vendored
+*.xml linguist-vendored
 
-# Ignore vendor and Node modules from language stats
+# Ignore common directories
 /vendor/** linguist-vendored
 /node_modules/** linguist-vendored
-
-# Ignore compiled assets
 /public/css/** linguist-vendored
 /public/js/** linguist-vendored
-/public/mix-manifest.json linguist-vendored
-
-# Ignore other public assets like images
+/public/vendor/** linguist-vendored
 /public/images/** linguist-vendored
 /public/fonts/** linguist-vendored
-
-# Ignore storage and cache
 /storage/** linguist-vendored
 /bootstrap/cache/** linguist-vendored
 
-# Optional: ignore README / LICENSE from stats
+# Optional: ignore project metadata files
 README.md linguist-vendored
 LICENSE linguist-vendored
+CHANGELOG.md linguist-vendored
+.styleci.yml linguist-vendored
+.github/** linguist-vendored
