@@ -9,3 +9,24 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+
+# Ignore vendor and Node modules from language stats
+/vendor/** linguist-vendored
+/node_modules/** linguist-vendored
+
+# Ignore compiled assets
+/public/css/** linguist-vendored
+/public/js/** linguist-vendored
+/public/mix-manifest.json linguist-vendored
+
+# Ignore other public assets like images
+/public/images/** linguist-vendored
+/public/fonts/** linguist-vendored
+
+# Ignore storage and cache
+/storage/** linguist-vendored
+/bootstrap/cache/** linguist-vendored
+
+# Optional: ignore README / LICENSE from stats
+README.md linguist-vendored
+LICENSE linguist-vendored
