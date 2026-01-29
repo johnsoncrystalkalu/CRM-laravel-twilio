@@ -17,7 +17,7 @@ A modern, high-performance Lead Management System integrated with Twilio Voice s
 
 ## 📸 Screenshots
 
-| Dashboard Overview | Lead Management | Integrated Dialer | Event Calendar |
+| Landing Page | Dashboard Overview | Integrated Dialer | Lead Management |
 | :---: | :---: | :---: | :---: |
 | ![Dash](public/assets/screenshots/t0.jpg) | ![Leads](public/assets/screenshots/t1.jpg) | ![Dialer](public/assets/screenshots/t2.jpg) | ![Calendar](public/assets/screenshots/t3.jpg) |
 
