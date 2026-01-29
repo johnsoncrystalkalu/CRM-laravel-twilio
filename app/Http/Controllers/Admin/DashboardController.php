@@ -13,13 +13,13 @@ class DashboardController extends Controller
 
     public function index()
 {
-    $recoveryLeadsCount = Lead::where('category', 'Recovery')->count();
+    $referralLeadsCount = Lead::where('category', 'Referral')->count();
     $tradingLeadsCount  = Lead::where('category', 'Trading')->count();
     $adminCount         = User::where('role', 'is_admin')->count();
     $userCount         = User::count();
     $callCount         = Call::count();
 
    // $tradingLeadsCount = 66666;
-    return view('admin.dashboard', compact('recoveryLeadsCount', 'tradingLeadsCount', 'adminCount', 'userCount', 'callCount'));
+    return view('admin.dashboard', compact('referralLeadsCount', 'tradingLeadsCount', 'adminCount', 'userCount', 'callCount'));
 }
 }

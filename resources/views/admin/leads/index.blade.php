@@ -190,7 +190,7 @@ document.getElementById('select-all').addEventListener('change', function () {
                         <label>Lead Type</label>
                         <select name="lead_type" class="form-control">
                             <option value="Trading">Trading</option>
-                            <option value="Recovery">Recovery</option>
+                            <option value="Referral">Referral</option>
                         </select>
                     </div>
                     <div class="mb-2">

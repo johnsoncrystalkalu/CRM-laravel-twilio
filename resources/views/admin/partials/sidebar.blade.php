@@ -13,7 +13,15 @@
     <!-- Trading Leads -->
     <a class="nav-link" href="{{ route('admin.leads.category', 'trading') }}">
         <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
-        Leads
+      Trading Leads
+    </a>
+
+       
+
+    <!-- Trading Leads -->
+    <a class="nav-link" href="{{ route('admin.leads.category', 'referral') }}">
+        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+      Referral Leads
     </a>
 
     <!-- Calendar / Events -->

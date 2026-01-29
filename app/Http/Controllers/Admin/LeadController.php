@@ -21,7 +21,7 @@ class LeadController extends Controller
         $category = ucfirst(strtolower($category));
 
         // Allow only valid categories
-        if (!in_array($category, ['Trading', 'Recovery'])) {
+        if (!in_array($category, ['Trading', 'Referral'])) {
             abort(404);
         }
 

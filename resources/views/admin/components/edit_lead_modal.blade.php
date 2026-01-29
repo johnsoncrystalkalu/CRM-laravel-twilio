@@ -45,7 +45,7 @@
                         <label>Lead Type</label>
                         <select name="lead_type" class="form-control">
                             <option value="Trading" {{ $lead->lead_type == 'Trading' ? 'selected' : '' }}>Trading</option>
-                            <option value="Recovery" {{ $lead->lead_type == 'Recovery' ? 'selected' : '' }}>Recovery</option>
+                            <option value="Referral" {{ $lead->lead_type == 'Referral' ? 'selected' : '' }}>Referral</option>
                         </select>
                     </div>
                     <div class="mb-2">
